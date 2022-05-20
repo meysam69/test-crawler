@@ -31,19 +31,24 @@ class HttpService implements ServiceInterface
         ];
 
         if (strtolower($method) === 'post') {
-            $options = array_merge($options, [
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => http_build_query($fields),
-            ]);
+            $options[CURLOPT_POST] = true;
+            $options[CURLOPT_POSTFIELDS] = http_build_query($fields);
         }
 
         $ch      = curl_init( $url );
         curl_setopt_array( $ch, $options );
         $content = curl_exec( $ch );
-//        $err     = curl_errno( $ch );
-//        $errmsg  = curl_error( $ch );
-//        $header  = curl_getinfo( $ch );
+        $err     = curl_errno( $ch );
+        $errmsg  = curl_error( $ch );
+        $header  = curl_getinfo( $ch );
         curl_close( $ch );
+
+        if (strtolower($method) === 'post') {
+
+            var_dump($options, $content, $err, $errmsg, $header);
+            exit;
+        }
+
 
         return $content;
     }

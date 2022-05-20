@@ -4,11 +4,12 @@
     </div>
 </div>
 <form class="row" action="" method="post">
-    <input type="hidden" name="step" value="1">
+    <input type="hidden" name="step" value="2">
+    <input type="hidden" name="__VIEWSTATE" value="<?= $viewState; ?>">
     <div class="row mb-3">
         <label for="Username" class="col-sm-2 col-form-label">Username</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" name="Username" value="<?= $username; ?>">
+            <input type="text" class="form-control" name="username" value="<?= $username; ?>">
         </div>
     </div>
     <div class="row mb-3">

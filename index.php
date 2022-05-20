@@ -16,16 +16,24 @@ $username = $_REQUEST['username'] ?? null;
 $password = $_REQUEST['password'] ?? null;
 $captcha = $_REQUEST['captcha'] ?? null;
 $captchaImg = null;
-$code = $_REQUEST['code'] ?? null;
+$viewState = $_REQUEST['__VIEWSTATE'] ?? null;
 $balance = 0;
+
 
 $reporter  = new PasargadBankReporter(new HttpService());
 
 if ( $step === '1') {
-    $captchaImg = $reporter->getCaptchaPhoto();
+    $captchaImg = $reporter->getEssentialValues()['photoBase64'];
+    $viewState = $reporter->getEssentialValues()['__VIEWSTATE'];
 }
 else{
     if ($step === '2') {
+        $reporter->setConfig([
+                'username' => $username,
+                'password' => $password,
+                'captcha' => $captcha,
+                'viewState' => $viewState,
+        ]);
         $login = $reporter->login();
         echo $login;
         exit;
