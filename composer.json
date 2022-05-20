@@ -1,0 +1,19 @@
+{
+    "name": "meysam69/test-crawler",
+    "description": "A sample project to login to a bank",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Meysam Mahmoudi",
+            "email": "maysam69@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0"
+    }
+}
