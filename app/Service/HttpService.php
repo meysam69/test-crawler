@@ -36,7 +36,7 @@ class HttpService implements ServiceInterface
         if (strtolower($method) === 'post') {
             $options[CURLOPT_POST] = true;
             $options[CURLOPT_POSTFIELDS] = http_build_query($fields);
-            $headers[] = 'content-length: '.strlen($options[CURLOPT_POSTFIELDS]);
+//            $headers[] = 'content-length: '.strlen($options[CURLOPT_POSTFIELDS]);
         }
 
         if (count($headers)) {
@@ -51,13 +51,6 @@ class HttpService implements ServiceInterface
         $header  = curl_getinfo( $ch );
         $sentHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
         curl_close( $ch );
-
-        if (strtolower($method) === 'post') {
-
-            var_dump($options, $sentHeaders, $err, $errmsg, $header, $content);
-            exit;
-        }
-
 
         return $content;
     }
