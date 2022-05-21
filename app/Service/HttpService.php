@@ -13,26 +13,34 @@ class HttpService implements ServiceInterface
         $this->cookieFile = CACHE_PATH. DS.'cookies.txt';
     }
 
-    public function request(string $url, string $method = 'GET', array $fields = []): string|array|null
+    public function request(string $url, string $method = 'GET', array $fields = [],
+                            array $headers = [], array $cookies = []): string|null
     {
         $options = [
             CURLOPT_RETURNTRANSFER => true,     // return web page
             CURLOPT_HEADER         => false,    // don't return headers
             CURLOPT_FOLLOWLOCATION => true,     // follow redirects
-            CURLOPT_ENCODING       => "",       // handle all encodings
             CURLOPT_USERAGENT      => $_SERVER['HTTP_USER_AGENT'], // who am i
             CURLOPT_AUTOREFERER    => true,     // set referer on redirect
             CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
             CURLOPT_TIMEOUT        => 120,      // timeout on response
             CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+            CURLOPT_SSL_VERIFYHOST => false,     // Disabled SSL Cert checks,
             CURLOPT_SSL_VERIFYPEER => false,     // Disabled SSL Cert checks,
             CURLOPT_COOKIEFILE => $this->cookieFile,
             CURLOPT_COOKIEJAR => $this->cookieFile,
+            CURLOPT_VERBOSE => true,
+            CURLINFO_HEADER_OUT => true,
         ];
 
         if (strtolower($method) === 'post') {
             $options[CURLOPT_POST] = true;
             $options[CURLOPT_POSTFIELDS] = http_build_query($fields);
+            $headers[] = 'content-length: '.strlen($options[CURLOPT_POSTFIELDS]);
+        }
+
+        if (count($headers)) {
+            $options[CURLOPT_HTTPHEADER] = $headers;
         }
 
         $ch      = curl_init( $url );
@@ -41,11 +49,12 @@ class HttpService implements ServiceInterface
         $err     = curl_errno( $ch );
         $errmsg  = curl_error( $ch );
         $header  = curl_getinfo( $ch );
+        $sentHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
         curl_close( $ch );
 
         if (strtolower($method) === 'post') {
 
-            var_dump($options, $content, $err, $errmsg, $header);
+            var_dump($options, $sentHeaders, $err, $errmsg, $header, $content);
             exit;
         }
 
