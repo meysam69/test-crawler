@@ -31,12 +31,12 @@ class HttpService implements ServiceInterface
             CURLOPT_COOKIEJAR => $this->cookieFile,
             CURLOPT_VERBOSE => true,
             CURLINFO_HEADER_OUT => true,
+            CURLOPT_ENCODING => '',
         ];
 
         if (strtolower($method) === 'post') {
             $options[CURLOPT_POST] = true;
             $options[CURLOPT_POSTFIELDS] = http_build_query($fields);
-//            $headers[] = 'content-length: '.strlen($options[CURLOPT_POSTFIELDS]);
         }
 
         if (count($headers)) {
@@ -51,6 +51,12 @@ class HttpService implements ServiceInterface
         $header  = curl_getinfo( $ch );
         $sentHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
         curl_close( $ch );
+
+        if (strtolower($method) === 'post') {
+            var_dump($err, $errmsg, $header, $sentHeaders, $content);
+            exit;
+        }
+
 
         return $content;
     }
